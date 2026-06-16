@@ -14,6 +14,9 @@ import employeeRoute from "./src/routes/saas/employee/employee.route.js";
 import plansRoute from "./src/routes/saas/plans/plans.saas.route.js";
 import roomTypeRoutes from "./src/routes/saas/hotels.room.type/hotels.room.typs.js";
 import hotelRoutes from "./src/routes/saas/hotels.route/hotels.route.js";
+import testimonials from "./src/routes/saas/testimonials/testimonials.route.js"
+
+
 
 dotenv.config();
 const PORT = process.env.PORT || 9000;
@@ -24,7 +27,7 @@ app.use(cookieParser());
 
 
 
-connectDB();
+
 
 //Cloudinary routes
 
@@ -36,6 +39,7 @@ app.use("/api/employees", employeeRoute);
 app.use("/api/plans", plansRoute);
 app.use('/api/room', roomTypeRoutes);
 app.use('/api/hotels', hotelRoutes);
+app.use('/api/testimonials',testimonials)
 
 
 
@@ -46,8 +50,10 @@ app.get("/", (req, res) => {
 
 app.use(errorHandler);
 
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+connectDB().then(() => {
+  app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+  });
 });
 
 
