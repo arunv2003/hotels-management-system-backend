@@ -61,6 +61,8 @@ export const registerHotel = asyncHandler(async (req, res) => {
     ownerProfilePhoto,
   } = req.body;
 
+  console.log(req.body);
+
   if (!hotelName) throw new ApiError(400, "Hotel name is required.");
   if (!hotelDescription) throw new ApiError(400, "Hotel description is required.");
   if (!ownerFullName) throw new ApiError(400, "Owner full name is required.");
@@ -86,9 +88,15 @@ export const registerHotel = asyncHandler(async (req, res) => {
     );
   }
 
+  let resolvedPlanId;
   if (planSelected) {
-    const plan = await Plan.findById(planSelected);
+    const isObjectId = /^[0-9a-fA-F]{24}$/.test(planSelected);
+    const plan = isObjectId 
+      ? await Plan.findById(planSelected) 
+      : await Plan.findOne({ slug: planSelected.toLowerCase() });
+      
     if (!plan) throw new ApiError(404, "Selected plan not found.");
+    resolvedPlanId = plan._id;
   }
 
   const hashedPassword = await bcrypt.hash(password, 12);
@@ -135,7 +143,7 @@ export const registerHotel = asyncHandler(async (req, res) => {
     invoicePrefix,
     financialYear,
     dateFormat,
-    planSelected: planSelected || undefined,
+    planSelected: resolvedPlanId || undefined,
     billingCycle,
     couponCode,
     totalRooms: Number(totalRooms),
@@ -250,7 +258,17 @@ export const updateHotel = asyncHandler(async (req, res) => {
   if (maxGuests !== undefined) updateData.maxGuests = Number(maxGuests);
   if (establishedYear !== undefined)
     updateData.establishedYear = Number(establishedYear);
-  if (planSelected !== undefined) updateData.planSelected = planSelected;
+  if (planSelected !== undefined && planSelected !== "") {
+    const isObjectId = /^[0-9a-fA-F]{24}$/.test(planSelected);
+    const plan = isObjectId 
+      ? await Plan.findById(planSelected) 
+      : await Plan.findOne({ slug: planSelected.toLowerCase() });
+      
+    if (!plan) throw new ApiError(404, "Selected plan not found.");
+    updateData.planSelected = plan._id;
+  } else if (planSelected === "") {
+    updateData.planSelected = undefined;
+  }
   if (Array.isArray(roomTypes)) updateData.roomTypes = roomTypes;
   if (Array.isArray(amenities)) updateData.amenities = amenities;
   if (Array.isArray(staff)) updateData.staff = staff;

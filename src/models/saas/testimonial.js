@@ -23,10 +23,10 @@ const testimonialSchema = new mongoose.Schema(
       enum: ["Pending", "Approved", "Rejected"],
       default: "Pending",
     },
-    image: {
+    avatar: {
       type: String,
     },
-    review: {
+    content: {
       type: String,
       required: true,
     },
