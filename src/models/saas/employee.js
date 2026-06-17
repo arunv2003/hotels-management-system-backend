@@ -121,7 +121,7 @@ const employeeSchema = new mongoose.Schema(
 
     salaryType: {
       type: String,
-      enum: ["Monthly", "Hourly"],
+      enum: ["Monthly", "Hourly","Annually"],
       default: "Monthly",
     },
 

@@ -16,6 +16,39 @@ const generateEmployeeCode = async () => {
   return employeeCode;
 };
 
+const normalizeDocuments = (documents) => {
+  if (!documents) {
+    return [];
+  }
+
+  if (Array.isArray(documents)) {
+    return documents.map((doc) => {
+      if (!doc) return null;
+      return {
+        name: doc.name || doc.title || "document",
+        url: doc.url || doc.cloudUrl || doc,
+      };
+    }).filter(Boolean);
+  }
+
+  if (typeof documents === "object") {
+    return Object.entries(documents)
+      .map(([key, value]) => {
+        if (!value) return null;
+        if (typeof value === "string") {
+          return { name: key, url: value };
+        }
+        return {
+          name: key,
+          url: value.cloudUrl || value.url || null,
+        };
+      })
+      .filter((doc) => doc && doc.url);
+  }
+
+  return [];
+};
+
 export const createEmployee = asyncHandler(async (req, res) => {
   const {
     firstName,
@@ -102,6 +135,8 @@ export const createEmployee = asyncHandler(async (req, res) => {
   const salt = await bcrypt.genSalt(10);
   const hashedPassword = await bcrypt.hash(password, salt);
 
+  const normalizedDocuments = normalizeDocuments(documents);
+
   const employee = await Employee.create({
     firstName,
     lastName,
@@ -128,7 +163,7 @@ export const createEmployee = asyncHandler(async (req, res) => {
     salary,
     aadharNumber,
     panNumber,
-    documents,
+    documents: normalizedDocuments,
   });
   return res
     .status(201)
@@ -257,6 +292,9 @@ export const updateEmployee = asyncHandler(async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, salt);
     employee.password = hashedPassword;
   }
+
+  const normalizedDocuments = documents ? normalizeDocuments(documents) : employee.documents;
+
   const updatedEmployee = await Employee.findByIdAndUpdate(
     id,
     {
@@ -284,7 +322,7 @@ export const updateEmployee = asyncHandler(async (req, res) => {
       salary,
       aadharNumber,
       panNumber,
-      documents,
+      documents: normalizedDocuments,
     },
     { new: true },
   ).populate("roleId", "name permissions");
