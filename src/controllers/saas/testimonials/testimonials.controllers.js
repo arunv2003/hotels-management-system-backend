@@ -77,7 +77,7 @@ export const getTestimonialById = asyncHandler(async (req, res) => {
 
 export const updateTestimonial = asyncHandler(async (req, res) => {
   const { id } = req.params;
-  const { author, role, hotel, rating, status, content, image } = req.body;
+  const { author, role, hotel, rating, status, content, avatar } = req.body;
 
   if (!author || !role || !hotel || !rating || !content || !status) {
     return res

@@ -14,7 +14,9 @@ import employeeRoute from "./src/routes/saas/employee/employee.route.js";
 import plansRoute from "./src/routes/saas/plans/plans.saas.route.js";
 import roomTypeRoutes from "./src/routes/saas/hotels.room.type/hotels.room.typs.js";
 import hotelRoutes from "./src/routes/saas/hotels.route/hotels.route.js";
-import testimonials from "./src/routes/saas/testimonials/testimonials.route.js"
+import testimonials from "./src/routes/saas/testimonials/testimonials.route.js";
+import couponsRoutes from "./src/routes/saas/coupons/coupons.routes.js";
+import announcementRoutes from "./src/routes/saas/announcement/announcement.route.js";
 
 
 
@@ -39,7 +41,9 @@ app.use("/api/employees", employeeRoute);
 app.use("/api/plans", plansRoute);
 app.use('/api/room', roomTypeRoutes);
 app.use('/api/hotels', hotelRoutes);
-app.use('/api/testimonials',testimonials)
+app.use('/api/testimonials', testimonials);
+app.use('/api/coupons', couponsRoutes);
+app.use('/api/announcement', announcementRoutes);
 
 
 
