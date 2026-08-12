@@ -39,6 +39,10 @@ const guestSchema = new mongoose.Schema(
       type: String,
       trim: true,
     },
+    idProofImage: {
+      type: String,
+      trim: true,
+    },
     address: {
       type: String,
     },

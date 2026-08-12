@@ -8,10 +8,7 @@ const bookingSchema = new mongoose.Schema(
       required: true,
       index: true,
     },
-    branchId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Branch",
-    },
+
     guestId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Guest",

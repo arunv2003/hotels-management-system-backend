@@ -4,6 +4,7 @@ import { ApiError } from "../../../common/utils/api.Errors.js";
 import { ApiResponse } from "../../../common/utils/api.Response.js";
 import Hotel from "../../../models/saas/hotels.js";
 import { Plan } from "../../../models/saas/plans.js";
+import { hotelsRoomType } from "../../../models/saas/hotels.room.type.js";
 
 
 const pickCloudinary = (doc) => {
@@ -187,7 +188,7 @@ export const getAllHotels = asyncHandler(async (req, res) => {
     Hotel.find(filter)
       .select("-password")
       .populate("planSelected", "name slug halfYearlyPrice yearlyPrice")
-      .populate("roomTypes", "roomType numberOfRooms")
+      .populate("roomTypes")
       .sort({ createdAt: -1 })
       .skip(skip)
       .limit(Number(limit)),
@@ -215,12 +216,30 @@ export const getAllHotels = asyncHandler(async (req, res) => {
 export const getHotelById = asyncHandler(async (req, res) => {
   const { id } = req.params;
 
-  const hotel = await Hotel.findById(id)
-    .select("-password")
-    .populate("planSelected", "name slug halfYearlyPrice yearlyPrice features")
-    .populate("roomTypes", "roomType numberOfRooms");
+  if (!id) throw new ApiError(400, "Hotel ID is required.");
 
-  if (!hotel) throw new ApiError(404, "Hotel not found.");
+  let hotel = null;
+
+  try {
+    hotel = await Hotel.findById(id)
+      .select("-password")
+      .populate("planSelected", "name slug halfYearlyPrice yearlyPrice features")
+      .populate("roomTypes");
+  } catch (err) {
+    // If not a valid ObjectId, search by email/ownerEmail
+    hotel = null;
+  }
+
+  if (!hotel) {
+    hotel = await Hotel.findOne({
+      $or: [{ ownerEmail: id }, { email: id }],
+    })
+      .select("-password")
+      .populate("planSelected", "name slug halfYearlyPrice yearlyPrice features")
+      .populate("roomTypes");
+  }
+
+  if (!hotel) throw new ApiError(404, "Hotel not found for given id.");
 
   return res
     .status(200)

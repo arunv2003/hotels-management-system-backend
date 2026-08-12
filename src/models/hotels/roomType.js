@@ -8,10 +8,6 @@ const roomTypeSchema = new mongoose.Schema(
       required: true,
       index: true,
     },
-    branchId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Branch",
-    },
     name: {
       type: String,
       required: true,

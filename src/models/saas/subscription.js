@@ -114,7 +114,6 @@ const subscriptionSchema = new mongoose.Schema(
     },
 
     limits: {
-      maxBranches: Number,
       maxRooms: Number,
       maxEmployees: Number,
       maxUsers: Number,
@@ -131,7 +130,6 @@ const subscriptionSchema = new mongoose.Schema(
       inventory: Boolean,
       whatsappNotification: Boolean,
       customBranding: Boolean,
-      multiBranch: Boolean,
       apiAccess: Boolean,
     },
 

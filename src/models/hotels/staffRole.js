@@ -8,11 +8,6 @@ const staffRoleSchema = new mongoose.Schema(
       required: true,
       index: true,
     },
-    branchId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Branch",
-      index: true,
-    },
     name: {
       type: String,
       required: true,
@@ -36,7 +31,7 @@ const staffRoleSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-// Ensure role names are unique per branch/hotel
-staffRoleSchema.index({ hotelId: 1, branchId: 1, name: 1 }, { unique: true });
+// Ensure role names are unique per hotel
+staffRoleSchema.index({ hotelId: 1, name: 1 }, { unique: true });
 
 export const StaffRole = mongoose.model("StaffRole", staffRoleSchema);

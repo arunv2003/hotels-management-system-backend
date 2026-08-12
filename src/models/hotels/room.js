@@ -8,13 +8,9 @@ const roomSchema = new mongoose.Schema(
       required: true,
       index: true,
     },
-    branchId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Branch",
-    },
     roomType: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "RoomType",
+      ref: "hotelsRoomType",
       required: true,
     },
     roomNumber: {
@@ -38,7 +34,7 @@ const roomSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-// Ensure room numbers are unique per branch/hotel
-roomSchema.index({ hotelId: 1, branchId: 1, roomNumber: 1 }, { unique: true });
+// Ensure room numbers are unique per hotel and room type
+roomSchema.index({ hotelId: 1, roomType: 1, roomNumber: 1 }, { unique: true });
 
 export const Room = mongoose.model("Room", roomSchema);

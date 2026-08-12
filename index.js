@@ -23,13 +23,25 @@ import announcementRoutes from "./src/routes/saas/announcement/announcement.rout
 dotenv.config();
 const PORT = process.env.PORT || 9000;
 const app = express();
-app.use(cors());
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      if (!origin) return callback(null, true);
+      return callback(null, origin);
+    },
+    credentials: true,
+  })
+);
 app.use(express.json());
 app.use(cookieParser());
 
 
 
 
+
+import roomRoutes from "./src/routes/hotels/room.route.js";
+import bookingRoutes from "./src/routes/hotels/booking.route.js";
+import guestRoutes from "./src/routes/hotels/guest.route.js";
 
 //Cloudinary routes
 
@@ -40,6 +52,9 @@ app.use("/api/roles", roleRoute);
 app.use("/api/employees", employeeRoute);
 app.use("/api/plans", plansRoute);
 app.use('/api/room', roomTypeRoutes);
+app.use('/api/rooms', roomRoutes);
+app.use('/api/bookings', bookingRoutes);
+app.use('/api/guests', guestRoutes);
 app.use('/api/hotels', hotelRoutes);
 app.use('/api/testimonials', testimonials);
 app.use('/api/coupons', couponsRoutes);
