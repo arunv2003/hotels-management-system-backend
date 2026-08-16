@@ -4,6 +4,9 @@ const orderItemSchema = new mongoose.Schema({
   menuItem: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "MenuItem",
+  },
+  name: {
+    type: String,
     required: true,
   },
   quantity: {
@@ -16,6 +19,14 @@ const orderItemSchema = new mongoose.Schema({
     type: Number,
     required: true,
     min: 0,
+  },
+  tax: {
+    type: Number,
+    default: 0,
+  },
+  image: {
+    type: String,
+    default: "🍽️",
   },
 });
 
@@ -32,12 +43,13 @@ const posOrderSchema = new mongoose.Schema(
       ref: "Booking",
       index: true,
     },
-    room: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Room",
+    guestRoom: {
+      type: String,
+      default: "",
     },
     tableNumber: {
       type: String,
+      default: "",
     },
     items: [orderItemSchema],
     subTotal: {
@@ -62,18 +74,23 @@ const posOrderSchema = new mongoose.Schema(
     },
     orderType: {
       type: String,
-      enum: ["RoomService", "DineIn", "Takeaway"],
-      required: true,
+      enum: ["RoomService", "DineIn", "Takeaway", "Direct"],
+      default: "Direct",
     },
     orderStatus: {
       type: String,
       enum: ["Received", "Preparing", "Served", "Delivered", "Cancelled"],
       default: "Received",
     },
+    paymentMethod: {
+      type: String,
+      enum: ["cash", "card", "upi", "room_charge"],
+      default: "cash",
+    },
     paymentStatus: {
       type: String,
       enum: ["Unpaid", "Paid", "ChargedToRoom"],
-      default: "Unpaid",
+      default: "Paid",
     },
   },
   { timestamps: true }

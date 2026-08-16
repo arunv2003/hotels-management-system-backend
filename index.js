@@ -43,7 +43,7 @@ import roomRoutes from "./src/routes/hotels/room.route.js";
 import bookingRoutes from "./src/routes/hotels/booking.route.js";
 import guestRoutes from "./src/routes/hotels/guest.route.js";
 
-//Cloudinary routes
+import posRoutes from "./src/routes/hotels/pos.route.js";
 
 app.use("/api/cloudinary", cloudinaryRoutes);
 //SAAS routes 
@@ -59,6 +59,7 @@ app.use('/api/hotels', hotelRoutes);
 app.use('/api/testimonials', testimonials);
 app.use('/api/coupons', couponsRoutes);
 app.use('/api/announcement', announcementRoutes);
+app.use('/api/pos', posRoutes);
 
 
 

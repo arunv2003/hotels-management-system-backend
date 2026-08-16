@@ -15,17 +15,36 @@ const menuItemSchema = new mongoose.Schema(
     },
     description: {
       type: String,
+      default: "",
     },
     category: {
       type: String,
       required: true,
-      enum: ["Starters", "Main Course", "Beverages", "Desserts", "Breads", "Soups", "Salads", "Other"],
-      default: "Other",
+      default: "food",
     },
     price: {
       type: Number,
       required: true,
       min: 0,
+    },
+    quantity: {
+      type: Number,
+      default: 0,
+      min: 0,
+    },
+
+    tax: {
+      type: Number,
+      default: 5,
+      min: 0,
+    },
+    image: {
+      type: String,
+      default: "🍽️",
+    },
+    popular: {
+      type: Boolean,
+      default: false,
     },
     isVeg: {
       type: Boolean,
