@@ -42,8 +42,8 @@ app.use(cookieParser());
 import roomRoutes from "./src/routes/hotels/room.route.js";
 import bookingRoutes from "./src/routes/hotels/booking.route.js";
 import guestRoutes from "./src/routes/hotels/guest.route.js";
-
 import posRoutes from "./src/routes/hotels/pos.route.js";
+import inventoryRoutes from "./src/routes/hotels/inventory.route.js";
 
 app.use("/api/cloudinary", cloudinaryRoutes);
 //SAAS routes 
@@ -60,6 +60,7 @@ app.use('/api/testimonials', testimonials);
 app.use('/api/coupons', couponsRoutes);
 app.use('/api/announcement', announcementRoutes);
 app.use('/api/pos', posRoutes);
+app.use('/api/inventory', inventoryRoutes);
 
 
 

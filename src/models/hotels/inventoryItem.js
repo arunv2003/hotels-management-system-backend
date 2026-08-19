@@ -13,11 +13,23 @@ const inventoryItemSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
+    sku: {
+      type: String,
+      trim: true,
+      default: "",
+    },
+    department: {
+      type: String,
+      required: true,
+      enum: ["Housekeeping", "Restaurant", "Kitchen", "Linen", "Amenities", "Maintenance", "General", "Other"],
+      default: "Housekeeping",
+      index: true,
+    },
     category: {
       type: String,
       required: true,
-      enum: ["Housekeeping", "Linen", "F&B", "Stationery", "Maintenance", "Other"],
-      default: "Other",
+      default: "General",
+      trim: true,
     },
     quantity: {
       type: Number,
@@ -35,9 +47,36 @@ const inventoryItemSchema = new mongoose.Schema(
       default: 0,
       min: 0,
     },
+    sellingPrice: {
+      type: Number,
+      default: 0,
+      min: 0,
+    },
     unit: {
       type: String,
-      default: "pcs", // E.g. "pcs", "liters", "kg", "box", "meters"
+      default: "pcs", // "pcs", "liters", "kg", "box", "bottles", "packs", "rolls", "pairs", "meters"
+    },
+    location: {
+      type: String,
+      default: "Main Store",
+      trim: true,
+    },
+    supplier: {
+      type: String,
+      default: "",
+      trim: true,
+    },
+    description: {
+      type: String,
+      default: "",
+    },
+    image: {
+      type: String,
+      default: "📦",
+    },
+    lastRestockedAt: {
+      type: Date,
+      default: Date.now,
     },
     isActive: {
       type: Boolean,
@@ -46,5 +85,15 @@ const inventoryItemSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
+
+// Virtual property to calculate stock status
+inventoryItemSchema.virtual("status").get(function () {
+  if (this.quantity <= 0) return "Out of Stock";
+  if (this.quantity <= this.minStockLevel) return "Low Stock";
+  return "In Stock";
+});
+
+inventoryItemSchema.set("toJSON", { virtuals: true });
+inventoryItemSchema.set("toObject", { virtuals: true });
 
 export const InventoryItem = mongoose.model("InventoryItem", inventoryItemSchema);
